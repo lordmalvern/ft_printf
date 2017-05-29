@@ -6,13 +6,13 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 18:05:14 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/26 18:27:20 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/05/29 12:12:44 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 
-static int	base_length(long value, int base)
+static int		base_length(intmax_t value, int base)
 {
 	int len;
 
@@ -29,14 +29,14 @@ static int	base_length(long value, int base)
 	return (len);
 }
 
-static long	ft_lpow(long base, int pow)
+static intmax_t	ft_lpow(intmax_t base, int pow)
 {
 	if (pow == 0)
 		return (1);
 	return (base * ft_lpow(base, pow - 1));
 }
 
-static char	*to_str(long val, int len, int i, int base)
+static char		*to_str(intmax_t val, int len, int i, int base)
 {
 	char *digits;
 	char *out;
@@ -65,16 +65,14 @@ static char	*to_str(long val, int len, int i, int base)
 	return (out);
 }
 
-char		*ft_itoa_base(int value, int base)
+char			*ft_itoa_base(intmax_t value, int base)
 {
-	long	val;
 	int		len;
 	int		i;
 
 	if (value == 0)
 		return ("0");
-	val = value;
-	len = base_length(val, base);
+	len = base_length(value, base);
 	i = 0;
-	return (to_str(val, len, i, base));
+	return (to_str(value, len, i, base));
 }
