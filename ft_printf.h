@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 14:09:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/29 14:44:22 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/05/29 19:43:28 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define CHR(x) (x == 'c')
 # define W_CHR(x) (x == 'C')
 # define IS_NUM(x) (INT(x) || OCT(x) || U_INT(x) || HEX(x) || C_HEX(x))
-# define IS_LON(x) (LON(x) || L_OCT(x) || U_LON(x))
+# define IS_LON(x) (LON(x) || L_OCT(x) || U_LON(x) || PTR(x))
 # define IS_CHR(x) (CHR(x) || STR(x) || W_CHR(x) || W_STR(x))
 
 typedef enum	e_lmod
@@ -43,10 +43,10 @@ typedef enum	e_lmod
 	Z,
 	N
 }				t_lmod;
-int		ft_printf(char *fmt, ...);
-char	*ft_itoa_base(intmax_t value, int base);
-int		num_handler(char c, va_list *args, ...);
-int		lon_handler(char c, va_list *args, ...);
-int		chr_handler(char c, va_list *args, ...);
+int				ft_printf(char *fmt, ...);
+char			*ft_itoa_base(intmax_t value, int base, int precision);
+int				num_handler(char c, va_list *args, int **flags, int **wpl);
+int				chr_handler(char c, va_list *args, int **flags, int **wpl);
+char			*ft_strfill(char *src, const char *fill, int len, int dir);
 
 #endif
