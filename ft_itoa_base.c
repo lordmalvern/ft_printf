@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 18:05:14 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/29 18:01:07 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/05/31 21:12:08 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ static char		*to_str(intmax_t val, int len, int i, int base)
 
 char			*ft_itoa_base(intmax_t value, int base, int precision)
 {
-	int		len;
-	int		i;
+	int	len;
+	int	i;
 
 	if (value == 0)
 		return ("0");

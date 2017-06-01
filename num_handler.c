@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/29 19:50:02 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/05/31 21:22:54 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 
 static int int_handler(char c, va_list *args, int **f, int **wpl)
 {
-	int t;
-	char *out;
+	size_t	t;
+	char	*out;
 
 	*wpl[1] = (*wpl[1] == 0 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	if ((t_lmod)*wpl[2] == L || LON(c))
@@ -60,8 +60,8 @@ static int int_handler(char c, va_list *args, int **f, int **wpl)
 
 static int oct_handler(char c, va_list *args, int **f, int **wpl)
 {
-	int t;
-	char *out;
+	size_t	t;
+	char	*out;
 
 	*wpl[1] = (*wpl[1] == 0 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	if ((t_lmod)*wpl[2] == L ||L_OCT(c))
@@ -87,8 +87,8 @@ static int oct_handler(char c, va_list *args, int **f, int **wpl)
 
 static int uint_handler(char c, va_list *args, int **f, int **wpl)
 {
-	int t;
-	char *out;
+	size_t	t;
+	char	*out;
 
 	*wpl[1] = (*wpl[1] == 0 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	if ((t_lmod)*wpl[2] == L || U_LON(c))
@@ -113,8 +113,8 @@ static int uint_handler(char c, va_list *args, int **f, int **wpl)
 
 static int hex_handler(char c, va_list *args, int **f, int **wpl)
 {
-	int t;
-	char *out;
+	size_t	t;
+	char	*out;
 
 	*wpl[1] = (*wpl[1] == 0 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	if ((t_lmod)*wpl[2] == L)

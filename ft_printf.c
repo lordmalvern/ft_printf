@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/29 19:38:21 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/05/31 21:45:14 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,10 @@ static t_lmod lmod_handler(char *fmt, int *i)
 
 static int print_handler(char *fmt, va_list *args, int *i)
 {
-	int *flags;
-	int *width_prec_lmod;
-	t_lmod lmod;
+	int		*flags;
+	int		*width_prec_lmod;
+	t_lmod	lmod;
 
-	if (fmt[++(*i)] == '%')
-		return ((int)write(1, "%", 1));
 	flags = flag_handler(fmt, i);
 	width_prec_lmod = (int *)malloc(3 * sizeof(int));
 	width_prec_lmod[0] = (ft_isdigit(fmt[*i])) ? width_prec_handler(fmt, i) : 0;
@@ -108,14 +106,16 @@ static int print_handler(char *fmt, va_list *args, int *i)
 		return (num_handler(fmt[*i], args, &flags, &width_prec_lmod));
 	if (IS_CHR(fmt[*i]))
 		return (chr_handler(fmt[*i], args, &flags, &width_prec_lmod));
+	if (fmt[(*i)] == '%')
+		return ((int)write(1, "%", 1));
 	return (0);
 }
 
 int	ft_printf(char *fmt, ...)
 {
-	va_list args;
-	int i;
-	int tot;
+	va_list	args;
+	int		i;
+	int		tot;
 
 	i = -1;
 	tot = 0;
@@ -123,10 +123,13 @@ int	ft_printf(char *fmt, ...)
 	while (fmt[++i] != '\0')
 	{
 		if (fmt[i] == '%')
+		{
+			i++;
 			tot += print_handler(fmt, &args, &i);
+		}
 		else
 			tot += (int)write(1, &fmt[i], 1);
 	}
 	va_end(args);
-	return (i + tot - 1);
+	return (tot);
 }
