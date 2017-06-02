@@ -6,13 +6,13 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/31 21:45:14 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/01 16:49:13 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int *flag_handler(char *fmt, int *i)
+static int		*flag_handler(char *fmt, int *i)
 {
 	int *flags;
 
@@ -34,7 +34,7 @@ static int *flag_handler(char *fmt, int *i)
 	return (flags);
 }
 
-static int width_prec_handler(char *fmt, int *i)
+static int		width_prec_handler(char *fmt, int *i)
 {
 	int j;
 
@@ -45,7 +45,7 @@ static int width_prec_handler(char *fmt, int *i)
 	return (ft_atoi(ft_strsub(fmt, j, *i - j)));
 }
 
-static t_lmod lmod_handler(char *fmt, int *i)
+static t_lmod	lmod_handler(char *fmt, int *i)
 {
 	if (fmt[*i] == 'h')
 	{
@@ -88,7 +88,7 @@ static t_lmod lmod_handler(char *fmt, int *i)
 ** Returns number of characters written to stdout.
 */
 
-static int print_handler(char *fmt, va_list *args, int *i)
+static int		print_handler(char *fmt, va_list *args, int *i)
 {
 	int		*flags;
 	int		*width_prec_lmod;
@@ -111,7 +111,7 @@ static int print_handler(char *fmt, va_list *args, int *i)
 	return (0);
 }
 
-int	ft_printf(char *fmt, ...)
+int				ft_printf(char *fmt, ...)
 {
 	va_list	args;
 	int		i;

@@ -6,9 +6,10 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/31 21:11:19 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/01 16:46:15 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "ft_printf.h"
 
 /*
@@ -27,6 +28,7 @@
 ** flags[2] is 1 if the ' ' flag was present, 2 if the + flag was, 0 if neither.
 ** The flags in flags[2] can only be used on signed numbers (d or i)
 */
+
 static char	*utf8_to_byte(int c)
 {
 	char *out;
@@ -38,6 +40,7 @@ static char	*utf8_to_byte(int c)
 	out[3] = c & 0xFF;
 	return (out);
 }
+
 static int	c_handler(char c, va_list *args, int **f, int **wpl)
 {
 	int		t;
@@ -50,7 +53,7 @@ static int	c_handler(char c, va_list *args, int **f, int **wpl)
 	o = (p == 1) ? ft_strfill("", "0", t, 0) : ft_strfill("", " ", t, 0);
 	if (p != 2)
 		ft_putstr(o);
-	if (CHR(c) && (t_lmod)*wpl[2] != L)
+	if (CHR(c) && *wpl[2] != (int)L)
 		ft_putchar(va_arg(*args, int));
 	else
 		write(1, utf8_to_byte(va_arg(*args, int)), 4);
@@ -86,15 +89,15 @@ static int	str_handler(char c, va_list *args, int **f, int **wpl)
 
 	t = *wpl[0];
 	p = *f[1];
-	o = (STR(c) && (t_lmod)*wpl[2] != L) ? va_arg(*args, char *) : "";
+	o = (STR(c) && *wpl[2] != (int)L) ? va_arg(*args, char *) : "";
 	o = (*wpl[1] > 0) ? ft_strsub(o, 0, *wpl[1]) : o;
 	o = (p == 0) ? ft_strfill(o, " ", t, 0) : o;
 	o = (p == 1) ? ft_strfill(o, "0", t, 0) : o;
 	o = (p == 2) ? ft_strfill(o, " ", t, 1) : o;
-	t = (STR(c) && (t_lmod)*wpl[2] != L) ? ft_strlen(o) : t;
+	t = (STR(c) && *wpl[2] != (int)L) ? ft_strlen(o) : t;
 	if (p != 2)
 		ft_putstr(o);
-	if (W_STR(c) || (t_lmod)*wpl[2] == L)
+	if (W_STR(c) || *wpl[2] == (int)L)
 		t += ft_putwstr(va_arg(*args, wchar_t *), *wpl[1]);
 	if (p == 2)
 		ft_putstr(o);

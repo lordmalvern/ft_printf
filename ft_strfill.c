@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_fillstr.c                                       :+:      :+:    :+:   */
+/*   ft_strfill.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 17:14:55 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/31 21:23:27 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/01 16:47:20 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char *ft_strfill(char *src, const char *fill, size_t len, int dir)
+char	*ft_strfill(char *src, const char *fill, size_t len, int dir)
 {
 	char *out;
 
