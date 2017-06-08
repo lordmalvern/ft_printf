@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/01 16:46:15 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/07 15:32:30 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static int	c_handler(char c, va_list *args, int **f, int **wpl)
 	t = *wpl[0];
 	p = *f[1];
 	t--;
-	o = (p == 1) ? ft_strfill("", "0", t, 0) : ft_strfill("", " ", t, 0);
+	o = ft_strnew(1);
+	o = (p == 1) ? ft_strfill(o, "0", t, 0) : ft_strfill(o, " ", t, 0);
 	if (p != 2)
 		ft_putstr(o);
 	if (CHR(c) && *wpl[2] != (int)L)
@@ -89,8 +90,8 @@ static int	str_handler(char c, va_list *args, int **f, int **wpl)
 
 	t = *wpl[0];
 	p = *f[1];
-	o = (STR(c) && *wpl[2] != (int)L) ? va_arg(*args, char *) : "";
-	o = (*wpl[1] > 0) ? ft_strsub(o, 0, *wpl[1]) : o;
+	o = (STR(c) && *wpl[2] != (int)L) ? va_arg(*args, char *) : ft_strnew(1);
+	o = (*wpl[1] != -1) ? ft_strsub(o, 0, *wpl[1]) : o;
 	o = (p == 0) ? ft_strfill(o, " ", t, 0) : o;
 	o = (p == 1) ? ft_strfill(o, "0", t, 0) : o;
 	o = (p == 2) ? ft_strfill(o, " ", t, 1) : o;

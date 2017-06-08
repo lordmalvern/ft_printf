@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/01 17:04:04 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/07 10:45:16 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@
 ** The flags in flags[2] can only be used on signed numbers (d or i)
 */
 
-static int	int_handler(char c, va_list *args, int **f, int **wpl)
+static char		*int_handler(char c, va_list *args, int **f, int **wpl)
 {
 	size_t	t;
 	char	*out;
 
-	*wpl[1] = (*wpl[1] == 0 && *f[1] == 1) ? *wpl[0] : *wpl[1];
+	*wpl[1] = (*wpl[1] == -1 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	if (*wpl[2] == (int)L || LON(c))
 		out = ft_itoa_base(va_arg(*args, long), 10, *wpl[1]);
 	else if (*wpl[2] == (int)LL)
@@ -55,15 +55,15 @@ static int	int_handler(char c, va_list *args, int **f, int **wpl)
 	ft_putstr(out);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
-	return (ft_strlen(out));
+	return (out);
 }
 
-static int	oct_handler(char c, va_list *args, int **f, int **wpl)
+static char		*oct_handler(char c, va_list *args, int **f, int **wpl)
 {
 	size_t	t;
 	char	*out;
 
-	*wpl[1] = (*wpl[1] == 0 && *f[1] == 1) ? *wpl[0] : *wpl[1];
+	*wpl[1] = (*wpl[1] == -1 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	if (*wpl[2] == (int)L || L_OCT(c))
 		out = ft_itoa_base(va_arg(*args, unsigned long), 8, *wpl[1]);
 	else if (*wpl[2] == (int)LL)
@@ -82,15 +82,15 @@ static int	oct_handler(char c, va_list *args, int **f, int **wpl)
 	ft_putstr(out);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
-	return (ft_strlen(out));
+	return (out);
 }
 
-static int	uint_handler(char c, va_list *args, int **f, int **wpl)
+static char		*uint_handler(char c, va_list *args, int **f, int **wpl)
 {
 	size_t	t;
 	char	*out;
 
-	*wpl[1] = (*wpl[1] == 0 && *f[1] == 1) ? *wpl[0] : *wpl[1];
+	*wpl[1] = (*wpl[1] == -1 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	if (*wpl[2] == (int)L || U_LON(c))
 		out = ft_itoa_base(va_arg(*args, unsigned long), 10, *wpl[1]);
 	else if (*wpl[2] == (int)LL)
@@ -108,15 +108,15 @@ static int	uint_handler(char c, va_list *args, int **f, int **wpl)
 	ft_putstr(out);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
-	return (ft_strlen(out));
+	return (out);
 }
 
-static int	hex_handler(char c, va_list *args, int **f, int **wpl)
+static char		*hex_handler(char c, va_list *args, int **f, int **wpl)
 {
 	size_t	t;
 	char	*out;
 
-	*wpl[1] = (*wpl[1] == 0 && *f[1] == 1) ? *wpl[0] : *wpl[1];
+	*wpl[1] = (*wpl[1] == -1 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	if (*wpl[2] == (int)L)
 		out = ft_itoa_base(va_arg(*args, unsigned long), 16, *wpl[1]);
 	else if (*wpl[2] == (int)LL)
@@ -137,18 +137,26 @@ static int	hex_handler(char c, va_list *args, int **f, int **wpl)
 	ft_putstr(out);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
-	return (ft_strlen(out));
+	return (out);
 }
 
-int			num_handler(char c, va_list *args, int **flags, int **wpl)
+int				num_handler(char c, va_list *args, int **flags, int **wpl)
 {
+	char	*out;
+	int		len;
+
 	if (INT(c) || LON(c))
-		return (int_handler(c, args, flags, wpl));
-	if (OCT(c) || L_OCT(c))
-		return (oct_handler(c, args, flags, wpl));
-	if (U_INT(c) || U_LON(c))
-		return (uint_handler(c, args, flags, wpl));
-	if (HEX(c) || C_HEX(c) || PTR(c))
-		return (hex_handler(c, args, flags, wpl));
-	return (0);
+		out = int_handler(c, args, flags, wpl);
+	else if (OCT(c) || L_OCT(c))
+		out = oct_handler(c, args, flags, wpl);
+	else if (U_INT(c) || U_LON(c))
+		out = uint_handler(c, args, flags, wpl);
+	else if (HEX(c) || C_HEX(c) || PTR(c))
+		out = hex_handler(c, args, flags, wpl);
+	else
+		return (0);
+	len = ft_strlen(out);
+	ft_putstr(out);
+	ft_strdel(&out);
+	return (len);
 }

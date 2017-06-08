@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 18:05:14 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/05/31 21:12:08 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/01 22:51:58 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char			*ft_itoa_base(intmax_t value, int base, int precision)
 		return ("0");
 	len = base_length(value, base);
 	if (len < precision)
-		len += precision;
+		len = precision;
 	i = 0;
 	return (to_str(value, len, i, base));
 }

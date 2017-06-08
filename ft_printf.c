@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/01 16:49:13 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/07 10:02:21 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int		*flag_handler(char *fmt, int *i)
 	return (flags);
 }
 
-static int		width_prec_handler(char *fmt, int *i)
+static int		wp_handler(char *fmt, int *i)
 {
 	int j;
 
@@ -42,33 +42,34 @@ static int		width_prec_handler(char *fmt, int *i)
 	(*i)++;
 	while (ft_isdigit(fmt[*i]))
 		(*i)++;
+	if (j == *i + 1)
+		return (0);
 	return (ft_atoi(ft_strsub(fmt, j, *i - j)));
 }
 
 static t_lmod	lmod_handler(char *fmt, int *i)
 {
+	int j;
+
+	j = 0;
 	if (fmt[*i] == 'h')
 	{
-		(*i)++;
-		return ((fmt[*i] == 'h') ? HH : H);
+		if (fmt[++(*i)] == 'h')
+			j = (*i)++;
+		return ((j == *i - 1) ? HH : H);
 	}
 	else if (fmt[*i] == 'l')
 	{
-		(*i)++;
-		return ((fmt[*i] == 'l') ? LL : L);
+		if (fmt[++(*i)] == 'l')
+			j = (*i)++;
+		return ((j == *i - 1) ? LL : L);
 	}
-	else if (fmt[*i] == 'j')
+	else if (fmt[*i] == 'j' || fmt[*i] == 'z')
 	{
 		(*i)++;
-		return (J);
+		return ((fmt[*i - 1] == 'j') ? J : Z);
 	}
-	else if (fmt[*i] == 'z')
-	{
-		(*i)++;
-		return (Z);
-	}
-	else
-		return (N);
+	return (N);
 }
 
 /*
@@ -96,8 +97,8 @@ static int		print_handler(char *fmt, va_list *args, int *i)
 
 	flags = flag_handler(fmt, i);
 	width_prec_lmod = (int *)malloc(3 * sizeof(int));
-	width_prec_lmod[0] = (ft_isdigit(fmt[*i])) ? width_prec_handler(fmt, i) : 0;
-	width_prec_lmod[1] = (fmt[*i] == '.') ? width_prec_handler(fmt, i) : 0;
+	width_prec_lmod[0] = (ft_isdigit(fmt[*i])) ? wp_handler(fmt, i) : -1;
+	width_prec_lmod[1] = (fmt[*i] == '.') ? wp_handler(fmt, i) : -1;
 	if (width_prec_lmod[1] != 0 && flags[1] == 1)
 		flags[1] = 0;
 	lmod = (IS_LMOD(fmt[*i])) ? lmod_handler(fmt, i) : N;
@@ -106,6 +107,8 @@ static int		print_handler(char *fmt, va_list *args, int *i)
 		return (num_handler(fmt[*i], args, &flags, &width_prec_lmod));
 	if (IS_CHR(fmt[*i]))
 		return (chr_handler(fmt[*i], args, &flags, &width_prec_lmod));
+	free(flags);
+	free(width_prec_lmod);
 	if (fmt[(*i)] == '%')
 		return ((int)write(1, "%", 1));
 	return (0);
@@ -117,10 +120,10 @@ int				ft_printf(char *fmt, ...)
 	int		i;
 	int		tot;
 
-	i = -1;
+	i = 0;
 	tot = 0;
 	va_start(args, fmt);
-	while (fmt[++i] != '\0')
+	while (fmt[i] != '\0')
 	{
 		if (fmt[i] == '%')
 		{
@@ -128,7 +131,10 @@ int				ft_printf(char *fmt, ...)
 			tot += print_handler(fmt, &args, &i);
 		}
 		else
+		{
 			tot += (int)write(1, &fmt[i], 1);
+			i++;
+		}
 	}
 	va_end(args);
 	return (tot);
