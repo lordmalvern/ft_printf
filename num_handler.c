@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/07 10:45:16 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/08 14:14:33 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static char		*int_handler(char c, va_list *args, int **f, int **wpl)
 		out = ft_strfill(out, " ", t, 1);
 	if ((*f[2] == 1 || *f[2] == 2) && ft_strchr(out, '-') == NULL)
 		out = (*f[2] == 1) ? ft_strjoin(" ", out) : ft_strjoin("+", out);
-	ft_putstr(out);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
 	return (out);
@@ -79,7 +78,6 @@ static char		*oct_handler(char c, va_list *args, int **f, int **wpl)
 	if (ft_strlen(out) < t && *f[1] == 2)
 		out = ft_strfill(out, " ", t, 1);
 	out = (*f[0] == 1) ? ft_strjoin("0", out) : out;
-	ft_putstr(out);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
 	return (out);
@@ -105,7 +103,6 @@ static char		*uint_handler(char c, va_list *args, int **f, int **wpl)
 	out = (ft_strlen(out) < t && *f[1] == 0) ? ft_strfill(out, " ", t, 0) : out;
 	if (ft_strlen(out) < t && *f[1] == 2)
 		out = ft_strfill(out, " ", t, 1);
-	ft_putstr(out);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
 	return (out);
@@ -134,7 +131,6 @@ static char		*hex_handler(char c, va_list *args, int **f, int **wpl)
 	out = (ft_strlen(out) < t && *f[1] == 2) ? ft_strfill(out, " ", t, 1) : out;
 	out = (*f[0] == 1 || PTR(c)) ? ft_strjoin("0X", out) : out;
 	out = (HEX(c) || PTR(c)) ? ft_strmap(out, (char (*)(char))ft_tolower) : out;
-	ft_putstr(out);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
 	return (out);

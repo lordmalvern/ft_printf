@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/07 15:32:30 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/08 14:37:51 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static int	c_handler(char c, va_list *args, int **f, int **wpl)
 		ft_putstr(o);
 	if (CHR(c) && *wpl[2] != (int)L)
 		ft_putchar(va_arg(*args, int));
+	else if (c == '%')
+		write(1, "%", 1);
 	else
 		write(1, utf8_to_byte(va_arg(*args, int)), 4);
 	if (p == 2)
@@ -90,7 +92,10 @@ static int	str_handler(char c, va_list *args, int **f, int **wpl)
 
 	t = *wpl[0];
 	p = *f[1];
-	o = (STR(c) && *wpl[2] != (int)L) ? va_arg(*args, char *) : ft_strnew(1);
+	if (STR(c) && *wpl[2] != (int)L)
+		o = ft_strdup(va_arg(*args, char *));
+	else
+		o = ft_strnew(1);
 	o = (*wpl[1] != -1) ? ft_strsub(o, 0, *wpl[1]) : o;
 	o = (p == 0) ? ft_strfill(o, " ", t, 0) : o;
 	o = (p == 1) ? ft_strfill(o, "0", t, 0) : o;
@@ -110,7 +115,7 @@ static int	str_handler(char c, va_list *args, int **f, int **wpl)
 
 int			chr_handler(char c, va_list *args, int **flags, int **wpl)
 {
-	if (CHR(c) || W_CHR(c))
+	if (CHR(c) || W_CHR(c) || c == '%')
 		return (c_handler(c, args, flags, wpl));
 	if (STR(c) || W_STR(c))
 		return (str_handler(c, args, flags, wpl));

@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/07 10:02:21 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/08 14:38:35 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,13 +104,11 @@ static int		print_handler(char *fmt, va_list *args, int *i)
 	lmod = (IS_LMOD(fmt[*i])) ? lmod_handler(fmt, i) : N;
 	width_prec_lmod[2] = (int)lmod;
 	if (IS_NUM(fmt[*i]) || IS_LON(fmt[*i]))
-		return (num_handler(fmt[*i], args, &flags, &width_prec_lmod));
-	if (IS_CHR(fmt[*i]))
-		return (chr_handler(fmt[*i], args, &flags, &width_prec_lmod));
+		return (num_handler(fmt[(*i)++], args, &flags, &width_prec_lmod));
+	if (IS_CHR(fmt[*i]) || fmt[*i] == '%')
+		return (chr_handler(fmt[(*i)++], args, &flags, &width_prec_lmod));
 	free(flags);
 	free(width_prec_lmod);
-	if (fmt[(*i)] == '%')
-		return ((int)write(1, "%", 1));
 	return (0);
 }
 
