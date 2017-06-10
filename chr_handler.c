@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/08 16:43:27 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/10 14:11:30 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,15 @@ static char	*utf8_to_byte(int c)
 
 static int	c_handler(char c, va_list *args, int **f, int **wpl)
 {
-	int		t;
-	int		p;
+	size_t	t;
 	char	*o;
 
-	t = *wpl[0];
-	p = *f[1];
-	t--;
+	t = (*wpl[0] >= 0) ? *wpl[0] : 0;
+	if (t > 0)
+		t--;
 	o = ft_strnew(1);
-	o = (p == 1) ? ft_strfill(o, "0", t, 0) : ft_strfill(o, " ", t, 0);
-	if (p != 2)
+	o = (*f[1] == 1) ? ft_strfill(o, "0", t, 0) : ft_strfill(o, " ", t, 0);
+	if (*f[1] != 2)
 		ft_putstr(o);
 	if (CHR(c) && *wpl[2] != (int)L)
 		ft_putchar(va_arg(*args, int));
@@ -60,7 +59,7 @@ static int	c_handler(char c, va_list *args, int **f, int **wpl)
 		write(1, "%", 1);
 	else
 		write(1, utf8_to_byte(va_arg(*args, wchar_t)), 4);
-	if (p == 2)
+	if (*f[1] == 2)
 		ft_putstr(o);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);
@@ -87,25 +86,23 @@ static int	ft_putwstr(wchar_t *str, int precision)
 static int	str_handler(char c, va_list *args, int **f, int **wpl)
 {
 	int		t;
-	int		p;
 	char	*o;
 
-	t = *wpl[0];
-	p = *f[1];
+	t = (*wpl[0] >= 0) ? *wpl[0] : 0;
 	if (STR(c) && *wpl[2] != (int)L)
 		o = ft_strdup(va_arg(*args, char *));
 	else
 		o = ft_strnew(1);
 	o = (*wpl[1] != -1) ? ft_strsub(o, 0, *wpl[1]) : o;
-	o = (p == 0) ? ft_strfill(o, " ", t, 0) : o;
-	o = (p == 1) ? ft_strfill(o, "0", t, 0) : o;
-	o = (p == 2) ? ft_strfill(o, " ", t, 1) : o;
+	o = (*f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
+	o = (*f[1] == 1) ? ft_strfill(o, "0", t, 0) : o;
+	o = (*f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
 	t = (STR(c) && *wpl[2] != (int)L) ? ft_strlen(o) : t;
-	if (p != 2)
+	if (*f[1] != 2)
 		ft_putstr(o);
 	if (W_STR(c) || *wpl[2] == (int)L)
 		t += ft_putwstr(va_arg(*args, wchar_t *), *wpl[1]);
-	if (p == 2)
+	if (*f[1] == 2)
 		ft_putstr(o);
 	ft_memdel((void **)f);
 	ft_memdel((void **)wpl);

@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 17:14:55 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/08 19:05:31 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/10 14:19:20 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 char	*ft_strfill(char *src, const char *fill, size_t len, int dir)
 {
-	char *out;
-	char *temp;
+	char	*out;
+	char	*temp;
+	size_t	l;
 
-	if (ft_strlen(src) >= len)
+	l = ft_strlen(src);
+	if (l >= len || len <= 0)
 		return (src);
 	out = ft_strdup(src);
 	free(src);
-	while (ft_strlen(out) < len)
+	while (l < len)
 	{
 		if (dir == 0)
 			temp = ft_strjoin(fill, out);
@@ -30,6 +32,7 @@ char	*ft_strfill(char *src, const char *fill, size_t len, int dir)
 		free(out);
 		out = ft_strdup(temp);
 		free(temp);
+		l += ft_strlen(fill);
 	}
 	return (out);
 }
