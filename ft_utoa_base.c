@@ -6,13 +6,13 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/10 10:30:20 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 10:36:45 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/10 12:20:58 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int		base_length(uintmax_t value, int base)
+static int		base_length(uintmax_t value, unsigned int base)
 {
 	int len;
 
@@ -49,6 +49,8 @@ char			*ft_utoa_base(uintmax_t value, int base, int precision)
 
 	if (value == 0)
 		return ("0");
+	if (base < 2 || base > 16)
+		return ("Invalid base");
 	len = base_length(value, base);
 	if (len < precision)
 		len = precision;

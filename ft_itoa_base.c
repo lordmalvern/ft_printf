@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 18:05:14 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 10:36:12 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/10 12:20:53 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ char			*ft_itoa_base(intmax_t value, int base, int precision)
 
 	if (value == 0)
 		return ("0");
+	if (base < 2 || base > 16)
+		return ("Invalid base");
 	len = base_length(value, base);
 	if (len < precision)
 		len = precision;
