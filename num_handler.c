@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/08 19:33:40 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/10 10:38:15 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char		*oct_handler(char c, va_list *args, int **f, int **wpl)
 
 	*wpl[1] = (*wpl[1] == -1 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	lmod = *wpl[2];
-	out = ft_itoa_base(u_con(c, args, (t_lmod)lmod), 8, *wpl[1]);
+	out = ft_utoa_base(u_con(c, args, (t_lmod)lmod), 8, *wpl[1]);
 	t = *wpl[0];
 	out = (ft_strlen(out) < t && *f[1] == 0) ? ft_strfill(out, " ", t, 0) : out;
 	if (ft_strlen(out) < t && *f[1] == 2)
@@ -87,7 +87,7 @@ static char		*uint_handler(char c, va_list *args, int **f, int **wpl)
 
 	*wpl[1] = (*wpl[1] == -1 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	lmod = *wpl[2];
-	out = ft_itoa_base(u_con(c, args, (t_lmod)lmod), 10, *wpl[1]);
+	out = ft_utoa_base(u_con(c, args, (t_lmod)lmod), 10, *wpl[1]);
 	t = *wpl[0];
 	out = (ft_strlen(out) < t && *f[1] == 0) ? ft_strfill(out, " ", t, 0) : out;
 	if (ft_strlen(out) < t && *f[1] == 2)
@@ -106,7 +106,7 @@ static char		*hex_handler(char c, va_list *args, int **f, int **wpl)
 
 	*wpl[1] = (*wpl[1] == -1 && *f[1] == 1) ? *wpl[0] : *wpl[1];
 	lmod = *wpl[2];
-	out = ft_itoa_base(u_con(c, args, (t_lmod)lmod), 16, *wpl[1]);
+	out = ft_utoa_base(u_con(c, args, (t_lmod)lmod), 16, *wpl[1]);
 	t = *wpl[0];
 	out = (ft_strlen(out) < t && *f[1] == 0) ? ft_strfill(out, " ", t, 0) : out;
 	out = (ft_strlen(out) < t && *f[1] == 2) ? ft_strfill(out, " ", t, 1) : out;
