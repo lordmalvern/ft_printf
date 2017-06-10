@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/08 14:37:51 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/08 16:43:27 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	c_handler(char c, va_list *args, int **f, int **wpl)
 	else if (c == '%')
 		write(1, "%", 1);
 	else
-		write(1, utf8_to_byte(va_arg(*args, int)), 4);
+		write(1, utf8_to_byte(va_arg(*args, wchar_t)), 4);
 	if (p == 2)
 		ft_putstr(o);
 	ft_memdel((void **)f);

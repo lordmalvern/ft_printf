@@ -6,13 +6,14 @@
 #    By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/06 16:02:04 by bpuschel          #+#    #+#              #
-#    Updated: 2017/06/01 17:06:34 by bpuschel         ###   ########.fr        #
+#    Updated: 2017/06/08 16:25:56 by bpuschel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
 INCLUDE = libft/
-FILES = chr_handler.c ft_strfill.c ft_itoa_base.c ft_printf.c num_handler.c
+FILES = chr_handler.c ft_strfill.c ft_itoa_base.c ft_printf.c num_handler.c \
+		num_conv.c
 FTFILES = ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \
 ft_memchr.c ft_memcmp.c ft_strlen.c ft_strdup.c ft_strcpy.c ft_strncpy.c \
 ft_strcat.c ft_strncat.c ft_strlcat.c ft_strchr.c ft_strrchr.c ft_strstr.c \

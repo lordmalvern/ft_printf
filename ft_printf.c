@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/08 14:38:35 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/08 17:24:56 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,10 @@ int				ft_printf(char *fmt, ...)
 		if (fmt[i] == '%')
 		{
 			i++;
-			tot += print_handler(fmt, &args, &i);
+			if (fmt[i] != '\0')
+				tot += print_handler(fmt, &args, &i);
 		}
-		else
+		else if (fmt[i] != '\0')
 		{
 			tot += (int)write(1, &fmt[i], 1);
 			i++;
