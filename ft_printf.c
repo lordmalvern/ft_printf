@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 14:03:43 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/10 17:34:12 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 static int		*flag_handler(char *fmt, int *i)
 {
-	int *flags;
+	static int flags[3];
 
-	flags = (int *)malloc(3 * sizeof(int));
 	ft_bzero(flags, 3);
 	while (IS_FLAG(fmt[*i]))
 	{
@@ -93,24 +92,20 @@ static t_lmod	lmod_handler(char *fmt, int *i)
 static int		print_handler(char *fmt, va_list *args, int *i)
 {
 	int		*flags;
-	int		*width_prec_lmod;
+	int		width_prec_lmod[3];
 	t_lmod	lmod;
 
 	flags = flag_handler(fmt, i);
-	width_prec_lmod = (int *)malloc(3 * sizeof(int));
-	ft_bzero(width_prec_lmod, 3);
 	width_prec_lmod[0] = (ft_isdigit(fmt[*i])) ? wp_handler(fmt, i) : -1;
 	width_prec_lmod[1] = (fmt[*i] == '.') ? wp_handler(fmt, i) : -1;
-	if (width_prec_lmod[1] != 0 && flags[1] == 1)
+	if (width_prec_lmod[1] > 0 && flags[1] == 1)
 		flags[1] = 0;
 	lmod = (IS_LMOD(fmt[*i])) ? lmod_handler(fmt, i) : N;
 	width_prec_lmod[2] = (int)lmod;
 	if (IS_NUM(fmt[*i]) || IS_LON(fmt[*i]))
-		return (num_handler(fmt[(*i)++], args, &flags, &width_prec_lmod));
+		return (num_handler(fmt[(*i)++], args, flags, width_prec_lmod));
 	if (IS_CHR(fmt[*i]) || fmt[*i] == '%')
-		return (chr_handler(fmt[(*i)++], args, &flags, &width_prec_lmod));
-	free(flags);
-	free(width_prec_lmod);
+		return (chr_handler(fmt[(*i)++], args, flags, width_prec_lmod));
 	return (0);
 }
 

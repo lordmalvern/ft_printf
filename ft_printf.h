@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 14:09:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 10:35:40 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/10 17:25:40 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ typedef enum	e_lmod
 int				ft_printf(char *fmt, ...);
 char			*ft_itoa_base(intmax_t value, int base, int precision);
 char			*ft_utoa_base(uintmax_t value, int base, int precision);
-int				num_handler(char c, va_list *args, int **flags, int **wpl);
-int				chr_handler(char c, va_list *args, int **flags, int **wpl);
+int				num_handler(char c, va_list *args, int *flags, int *wpl);
+int				chr_handler(char c, va_list *args, int *flags, int *wpl);
 char			*ft_strfill(char *src, const char *fill, size_t len, int dir);
 intmax_t		s_con(char c, va_list *args, t_lmod lmod);
 uintmax_t		u_con(char c, va_list *args, t_lmod lmod);

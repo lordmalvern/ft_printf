@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 14:44:02 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/10 19:34:57 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,103 +30,98 @@
 ** The flags in flags[2] can only be used on signed numbers (d or i)
 */
 
-static char		*int_handler(char c, va_list *args, int **f, int **wpl)
+static char		*int_handler(char c, va_list *args, int *f, int *wpl)
 {
-	size_t	t;
-	char	*o;
-	char	*temp;
-	int		lmod;
+	size_t		t;
+	char		*o;
+	char		*temp;
+	intmax_t	n;
 
-	wpl[0][1] = (wpl[0][1] == -1 && f[0][1] == 1) ? wpl[0][0] : wpl[0][1];
-	lmod = wpl[0][2];
-	o = ft_itoa_base(s_con(c, args, (t_lmod)lmod), 10, wpl[0][1]);
-	t = (wpl[0][0] >= 0) ? wpl[0][0] : 0;
-	o = (ft_strlen(o) < t && f[0][1] == 0) ? ft_strfill(o, " ", t, 0) : o;
-	if (ft_strlen(o) < t && f[0][1] == 2)
-		o = ft_strfill(o, " ", t, 1);
-	if ((f[0][2] == 1 || f[0][2] == 2) && ft_strchr(o, '-') == NULL)
+	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
+	n = s_con(c, args, (t_lmod)wpl[2]);
+	if (f[2] > 0 || n < 0)
+		wpl[1]--;
+	o = ft_itoa_base(n, 10, wpl[1]);
+	t = (wpl[0] >= 0) ? wpl[0] : 0;
+	o = (f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
+	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
+	if ((f[2] == 1 || f[2] == 2) && ft_strchr(o, '-') == NULL)
 	{
-		temp = (f[0][2] == 1) ? ft_strjoin(" ", o) : ft_strjoin("+", o);
+		temp = (f[2] == 1) ? ft_strjoin(" ", o) : ft_strjoin("+", o);
 		free(o);
 		o = ft_strdup(temp);
 		free(temp);
 	}
-	ft_memdel((void **)f);
-	ft_memdel((void **)wpl);
 	return (o);
 }
 
-static char		*oct_handler(char c, va_list *args, int **f, int **wpl)
+static char		*oct_handler(char c, va_list *args, int *f, int *wpl)
 {
-	size_t	t;
-	char	*o;
-	char	*temp;
-	int		lmod;
+	size_t		t;
+	char		*o;
+	char		*temp;
+	uintmax_t	n;
 
-	wpl[0][1] = (wpl[0][1] == -1 && f[0][1] == 1) ? wpl[0][0] : wpl[0][1];
-	lmod = wpl[0][2];
-	o = ft_utoa_base(u_con(c, args, (t_lmod)lmod), 8, wpl[0][1]);
-	t = (wpl[0][0] >= 0) ? wpl[0][0] : 0;
-	o = (ft_strlen(o) < t && f[0][1] == 0) ? ft_strfill(o, " ", t, 0) : o;
-	if (ft_strlen(o) < t && f[0][1] == 2)
-		o = ft_strfill(o, " ", t, 1);
-	temp = (f[0][0] == 1) ? ft_strjoin("0", o) : o;
+	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
+	if (f[0] == 1 && wpl[1] - 1 > 0)
+		wpl[1]--;
+	n = u_con(c, args, (t_lmod)wpl[2]);
+	o = ft_utoa_base(n, 8, wpl[1]);
+	t = (wpl[0] >= 0) ? wpl[0] : 0;
+	temp = (f[0] == 1 && n != 0) ? ft_strjoin("0", o) : ft_strdup(o);
 	free(o);
 	o = ft_strdup(temp);
 	free(temp);
-	ft_memdel((void **)f);
-	ft_memdel((void **)wpl);
+	o = (f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
+	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
 	return (o);
 }
 
-static char		*uint_handler(char c, va_list *args, int **f, int **wpl)
+static char		*uint_handler(char c, va_list *args, int *f, int *wpl)
 {
-	size_t	t;
-	char	*o;
-	int		lmod;
+	size_t		t;
+	char		*o;
+	uintmax_t	n;
 
-	wpl[0][1] = (wpl[0][1] == -1 && f[0][1] == 1) ? wpl[0][0] : wpl[0][1];
-	lmod = wpl[0][2];
-	o = ft_utoa_base(u_con(c, args, (t_lmod)lmod), 10, wpl[0][1]);
-	t = (wpl[0][0] >= 0) ? wpl[0][0] : 0;
-	o = (ft_strlen(o) < t && f[0][1] == 0) ? ft_strfill(o, " ", t, 0) : o;
-	if (ft_strlen(o) < t && f[0][1] == 2)
-		o = ft_strfill(o, " ", t, 1);
-	ft_memdel((void **)f);
-	ft_memdel((void **)wpl);
+	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
+	n = u_con(c, args, (t_lmod)wpl[2]);
+	o = ft_utoa_base(n, 10, wpl[1]);
+	t = (wpl[0] >= 0) ? wpl[0] : 0;
+	o = (f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
+	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
 	return (o);
 }
 
-static char		*hex_handler(char c, va_list *args, int **f, int **wpl)
+static char		*hex_handler(char c, va_list *args, int *f, int *wpl)
 {
-	size_t	t;
-	char	*o;
-	char	*temp;
-	int		lmod;
+	size_t		t;
+	char		*o;
+	char		*p;
+	uintmax_t	n;
 
-	wpl[0][1] = (wpl[0][1] == -1 && f[0][1] == 1) ? wpl[0][0] : wpl[0][1];
-	lmod = wpl[0][2];
-	o = ft_utoa_base(u_con(c, args, (t_lmod)lmod), 16, wpl[0][1]);
-	t = (wpl[0][0] >= 0) ? wpl[0][0] : 0;
-	o = (ft_strlen(o) < t && f[0][1] == 0) ? ft_strfill(o, " ", t, 0) : o;
-	o = (ft_strlen(o) < t && f[0][1] == 2) ? ft_strfill(o, " ", t, 1) : o;
-	temp = (f[0][0] == 1 || PTR(c)) ? ft_strjoin("0X", o) : o;
+	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
+	if ((f[0] == 1 || PTR(c)) && wpl[1] - 2 > 0)
+		wpl[1] -= 2;
+	n = u_con(c, args, (t_lmod)wpl[2]);
+	o = ft_utoa_base(n, 16, wpl[1]);
+	t = (wpl[0] >= 0) ? wpl[0] : 0;
+	p = ((f[0] == 1 || PTR(c)) && n != 0) ? ft_strjoin("0X", o) : ft_strdup(o);
 	free(o);
-	o = ft_strdup(temp);
-	free(temp);
+	o = ft_strdup(p);
+	free(p);
+	o = (f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
+	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
 	if (HEX(c) || PTR(c))
 	{
-		temp = ft_strmap(o, (char (*)(char))ft_tolower);
+		p = ft_strmap(o, (char (*)(char))ft_tolower);
 		free(o);
-		o = ft_strdup(temp);
-		free(temp);
+		o = ft_strdup(p);
+		free(p);
 	}
-	ft_memdel((void **)f);
-	ft_memdel((void **)wpl);
 	return (o);
 }
 
-int				num_handler(char c, va_list *args, int **flags, int **wpl)
+int				num_handler(char c, va_list *args, int *flags, int *wpl)
 {
 	char	*o;
 	int		len;
