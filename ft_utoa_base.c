@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/10 10:30:20 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 19:40:41 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/11 20:50:42 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int		base_length(uintmax_t value, unsigned int base)
 	return (len);
 }
 
-static char		*to_str(uintmax_t val, int len, int i, int base)
+static char		*to_str(uintmax_t val, int len, int i, unsigned int base)
 {
 	char *digits;
 	char *out;

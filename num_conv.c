@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 16:05:20 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/08 16:30:15 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/11 19:24:13 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 intmax_t	s_con(char c, va_list *args, t_lmod lmod)
 {
+	if (lmod == L || LON(c))
+		return (va_arg(*args, long));
 	if (lmod == HH)
 		return ((char)va_arg(*args, int));
 	if (lmod == H)
 		return ((short)va_arg(*args, int));
-	if (lmod == L || LON(c))
-		return (va_arg(*args, long));
 	if (lmod == LL)
 		return (va_arg(*args, long long));
 	if (lmod == J)
@@ -31,12 +31,12 @@ intmax_t	s_con(char c, va_list *args, t_lmod lmod)
 
 uintmax_t	u_con(char c, va_list *args, t_lmod lmod)
 {
+	if (lmod == L || U_LON(c) || L_OCT(c))
+		return (va_arg(*args, unsigned long));
 	if (lmod == HH)
 		return ((unsigned char)va_arg(*args, unsigned int));
 	if (lmod == H)
 		return ((unsigned short)va_arg(*args, unsigned int));
-	if (lmod == L || U_LON(c) || L_OCT(c))
-		return (va_arg(*args, unsigned long));
 	if (lmod == LL)
 		return (va_arg(*args, unsigned long long));
 	if (lmod == J)

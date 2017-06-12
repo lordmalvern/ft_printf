@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/11 15:46:26 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/11 20:19:52 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,9 @@ static char		*int_handler(char c, va_list *args, int *f, int *wpl)
 	char		*temp;
 	intmax_t	n;
 
-	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
+	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] - 1 : wpl[1];
 	n = s_con(c, args, (t_lmod)wpl[2]);
-	if (f[2] > 0 || n < 0)
-		wpl[1]--;
 	o = ft_itoa_base(n, 10, wpl[1]);
-	t = (wpl[0] >= 0) ? wpl[0] : 0;
-	o = (f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
-	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
 	if ((f[2] == 1 || f[2] == 2) && ft_strchr(o, '-') == NULL)
 	{
 		temp = (f[2] == 1) ? ft_strjoin(" ", o) : ft_strjoin("+", o);
@@ -52,6 +47,9 @@ static char		*int_handler(char c, va_list *args, int *f, int *wpl)
 		o = ft_strdup(temp);
 		free(temp);
 	}
+	t = (wpl[0] >= 0) ? wpl[0] : 0;
+	o = (f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
+	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
 	return (o);
 }
 
@@ -68,7 +66,7 @@ static char		*oct_handler(char c, va_list *args, int *f, int *wpl)
 	n = u_con(c, args, (t_lmod)wpl[2]);
 	o = ft_utoa_base(n, 8, wpl[1]);
 	t = (wpl[0] >= 0) ? wpl[0] : 0;
-	temp = (f[0] == 1 && n != 0) ? ft_strjoin("0", o) : ft_strdup(o);
+	temp = (f[0] == 1) ? ft_strjoin("0", o) : ft_strdup(o);
 	free(o);
 	o = ft_strdup(temp);
 	free(temp);
