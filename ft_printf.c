@@ -6,44 +6,39 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 17:34:12 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/11 18:49:18 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int		*flag_handler(char *fmt, int *i)
+static void		flag_handler(int **flags, char *fmt, int *i)
 {
-	static int flags[3];
-
-	ft_bzero(flags, 3);
 	while (IS_FLAG(fmt[*i]))
 	{
 		if (fmt[*i] == '#')
-			flags[0] = 1;
-		if (fmt[*i] == '0' && flags[1] != 2)
-			flags[1] = 1;
+			(*flags)[0] = 1;
+		if (fmt[*i] == '0' && (*flags)[1] != 2)
+			(*flags)[1] = 1;
 		if (fmt[*i] == '-')
-			flags[1] = 2;
-		if (fmt[*i] == ' ' && flags[2] != 2)
-			flags[2] = 1;
+			(*flags)[1] = 2;
+		if (fmt[*i] == ' ' && (*flags)[2] != 2)
+			(*flags)[2] = 1;
 		if (fmt[*i] == '+')
-			flags[2] = 2;
+			(*flags)[2] = 2;
 		(*i)++;
 	}
-	return (flags);
 }
 
 static int		wp_handler(char *fmt, int *i)
 {
 	int j;
 
+	if (fmt[*i] == '.')
+		(*i)++;
 	j = *i;
-	(*i)++;
 	while (ft_isdigit(fmt[*i]))
 		(*i)++;
-	if (j == *i + 1)
-		return (0);
 	return (ft_atoi(ft_strsub(fmt, j, *i - j)));
 }
 
@@ -93,20 +88,29 @@ static int		print_handler(char *fmt, va_list *args, int *i)
 {
 	int		*flags;
 	int		width_prec_lmod[3];
+	int		out;
 	t_lmod	lmod;
 
-	flags = flag_handler(fmt, i);
-	width_prec_lmod[0] = (ft_isdigit(fmt[*i])) ? wp_handler(fmt, i) : -1;
-	width_prec_lmod[1] = (fmt[*i] == '.') ? wp_handler(fmt, i) : -1;
-	if (width_prec_lmod[1] > 0 && flags[1] == 1)
-		flags[1] = 0;
-	lmod = (IS_LMOD(fmt[*i])) ? lmod_handler(fmt, i) : N;
-	width_prec_lmod[2] = (int)lmod;
+	flags = (int *)malloc(3 * sizeof(int));
+	ft_bzero(flags, 3 * sizeof(int));
+	ft_memset(width_prec_lmod, -1, 3 * sizeof(int));
+	out = 0;
+	while (IS_PRE(fmt[*i]))
+	{
+		flag_handler(&flags, fmt, i);
+		width_prec_lmod[0] = (ft_isdigit(fmt[*i])) ? wp_handler(fmt, i) : -1;
+		width_prec_lmod[1] = (fmt[*i] == '.') ? wp_handler(fmt, i) : -1;
+		if (width_prec_lmod[1] > 0 && flags[1] == 1)
+			flags[1] = 0;
+		lmod = (IS_LMOD(fmt[*i])) ? lmod_handler(fmt, i) : N;
+		width_prec_lmod[2] = (int)lmod;
+	}
 	if (IS_NUM(fmt[*i]) || IS_LON(fmt[*i]))
-		return (num_handler(fmt[(*i)++], args, flags, width_prec_lmod));
+		out = num_handler(fmt[(*i)++], args, flags, width_prec_lmod);
 	if (IS_CHR(fmt[*i]) || fmt[*i] == '%')
-		return (chr_handler(fmt[(*i)++], args, flags, width_prec_lmod));
-	return (0);
+		out = chr_handler(fmt[(*i)++], args, flags, width_prec_lmod);
+	free(flags);
+	return (out);
 }
 
 int				ft_printf(char *fmt, ...)

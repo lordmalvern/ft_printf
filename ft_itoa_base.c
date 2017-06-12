@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 18:05:14 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 19:40:07 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/11 13:23:53 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static char		*to_str(intmax_t val, int len, int i, int base)
 	else
 		out = (char *)malloc((len + 2) * sizeof(char));
 	while (len >= 0)
-		out[i++] = digits[(val / ft_pow(base, len--)) % base];
+		out[i++] = digits[(val / (intmax_t)ft_pow(base, len--)) % base];
 	out[i] = '\0';
 	return (out);
 }
