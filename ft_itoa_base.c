@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 18:05:14 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/15 16:02:05 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/15 16:25:24 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ char			*ft_itoa_base(intmax_t value, int base, int precision)
 	int	i;
 
 	if (base < 2 || base > 16)
-		return ("Invalid base");
+		return (ft_strdup("Invalid base"));
 	if (value < -9223372036854775807)
-		return ("-9223372036854775808");
+		return (ft_strdup("-9223372036854775808"));
 	if (precision == 0 && value == 0)
 		return (ft_strnew(1));
 	len = base_length(value, base);
