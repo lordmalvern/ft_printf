@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/11 20:19:52 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/15 14:55:00 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,9 @@ static char		*int_handler(char c, va_list *args, int *f, int *wpl)
 	char		*temp;
 	intmax_t	n;
 
-	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] - 1 : wpl[1];
 	n = s_con(c, args, (t_lmod)wpl[2]);
+	wpl[0] = ((n < 0 || f[2] == 2) && f[1] == 1) ? wpl[0] - 1 : wpl[0];
+	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
 	o = ft_itoa_base(n, 10, wpl[1]);
 	if ((f[2] == 1 || f[2] == 2) && ft_strchr(o, '-') == NULL)
 	{

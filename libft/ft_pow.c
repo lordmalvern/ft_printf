@@ -6,13 +6,13 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 13:29:59 by bpuschel          #+#    #+#             */
-/*   Updated: 2016/11/16 16:04:39 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/15 15:31:29 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_pow(int base, int exp)
+intmax_t		ft_pow(int base, int exp)
 {
 	if (exp == 0)
 		return (1);
