@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/10 10:30:20 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/15 15:21:28 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/15 18:41:04 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,20 @@ static int		base_length(uintmax_t value, unsigned int base)
 
 static char		*to_str(uintmax_t val, int len, int i, unsigned int base)
 {
-	char	*digits;
-	char	*out;
-	int		act_len;
+	static char	*digits = "0123456789ABCDEF";
+	char		*out;
+	int			act_len;
 
-	digits = "0123456789ABCDEF";
 	act_len = base_length(val, base);
-	out = (char *)malloc((len + 2) * sizeof(char));
+	out = ft_strnew(len + 1);
 	if (len > act_len)
 	{
 		while (--len > act_len)
 			out[i++] = '0';
 	}
-	while (len >= 0)
+	while (len >= 0 && val != 0)
 		out[i++] = digits[(val / ft_pow(base, len--)) % base];
-	out[i] = '\0';
+	out[i] = (val == 0) ? '0' : out[i];
 	return (out);
 }
 

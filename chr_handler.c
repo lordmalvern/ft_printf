@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/11 15:46:05 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/15 17:05:21 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,14 @@ static int	str_handler(char c, va_list *args, int *f, int *wpl)
 		o = ft_strdup(va_arg(*args, char *));
 	else
 		o = ft_strnew(1);
+	if (o == NULL && wpl[2] != (int)L && !W_STR(c))
+	{
+		ft_putstr("(null)");
+		return (ft_strlen("(null)"));
+	}
 	o = (wpl[1] != -1) ? ft_strsub(o, 0, wpl[1]) : o;
-	o = (f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
 	o = (f[1] == 1) ? ft_strfill(o, "0", t, 0) : o;
-	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
+	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : ft_strfill(o, " ", t, 0);
 	t = (STR(c) && wpl[2] != (int)L) ? ft_strlen(o) : t;
 	if (f[1] != 2)
 		ft_putstr(o);

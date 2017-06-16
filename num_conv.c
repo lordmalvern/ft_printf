@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 16:05:20 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/11 19:24:13 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/15 19:51:03 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ uintmax_t	u_con(char c, va_list *args, t_lmod lmod)
 	if (lmod == Z)
 		return (va_arg(*args, size_t));
 	if (PTR(c))
-		return ((unsigned int)va_arg(*args, void *));
+		return ((unsigned long)va_arg(*args, void *));
 	return (va_arg(*args, unsigned int));
 }

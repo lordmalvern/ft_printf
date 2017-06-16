@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/11 19:16:23 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/15 19:15:12 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ static int		print_handler(char *fmt, va_list *args, int *i)
 	}
 	if (IS_NUM(fmt[*i]) || IS_LON(fmt[*i]))
 		out = num_handler(fmt[(*i)++], args, flags, width_prec_lmod);
-	if (IS_CHR(fmt[*i]) || fmt[*i] == '%')
+	else if (IS_CHR(fmt[*i]) || fmt[*i] == '%')
 		out = chr_handler(fmt[(*i)++], args, flags, width_prec_lmod);
 	free(flags);
 	return (out);
