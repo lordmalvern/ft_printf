@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/15 14:55:00 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/17 14:11:46 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char		*int_handler(char c, va_list *args, int *f, int *wpl)
 	intmax_t	n;
 
 	n = s_con(c, args, (t_lmod)wpl[2]);
-	wpl[0] = ((n < 0 || f[2] == 2) && f[1] == 1) ? wpl[0] - 1 : wpl[0];
+	wpl[0] = ((n < 0 || f[2] > 0) && f[1] == 1) ? wpl[0] - 1 : wpl[0];
 	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
 	o = ft_itoa_base(n, 10, wpl[1]);
 	if ((f[2] == 1 || f[2] == 2) && ft_strchr(o, '-') == NULL)
@@ -54,23 +54,23 @@ static char		*int_handler(char c, va_list *args, int *f, int *wpl)
 	return (o);
 }
 
-static char		*oct_handler(char c, va_list *args, int *f, int *wpl)
+static char		*oct_handler(char c, va_list *args, int *f, int *w)
 {
 	size_t		t;
 	char		*o;
-	char		*temp;
+	char		*p;
 	uintmax_t	n;
 
-	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
-	if (f[0] == 1 && wpl[1] - 1 > 0)
-		wpl[1]--;
-	n = u_con(c, args, (t_lmod)wpl[2]);
-	o = ft_utoa_base(n, 8, wpl[1]);
-	t = (wpl[0] >= 0) ? wpl[0] : 0;
-	temp = (f[0] == 1) ? ft_strjoin("0", o) : ft_strdup(o);
+	w[1] = (f[1] == 1 && w[1] < w[0]) ? w[0] : w[1];
+	if (f[0] == 1 && w[1] - 1 > 0)
+		w[1]--;
+	n = u_con(c, args, (t_lmod)w[2]);
+	o = ft_utoa_base(n, 8, w[1]);
+	t = (w[0] >= 0) ? w[0] : 0;
+	p = (f[0] == 1 && (n > 0 || w[1] == 0)) ? ft_strjoin("0", o) : ft_strdup(o);
 	free(o);
-	o = ft_strdup(temp);
-	free(temp);
+	o = ft_strdup(p);
+	free(p);
 	o = (f[1] == 0) ? ft_strfill(o, " ", t, 0) : o;
 	o = (f[1] == 2) ? ft_strfill(o, " ", t, 1) : o;
 	return (o);
@@ -104,7 +104,7 @@ static char		*hex_handler(char c, va_list *args, int *f, int *wpl)
 	n = u_con(c, args, (t_lmod)wpl[2]);
 	o = ft_utoa_base(n, 16, wpl[1]);
 	t = (wpl[0] >= 0) ? wpl[0] : 0;
-	p = ((f[0] == 1 || PTR(c)) && n != 0) ? ft_strjoin("0X", o) : ft_strdup(o);
+	p = ((f[0] == 1 && n != 0) || PTR(c)) ? ft_strjoin("0X", o) : ft_strdup(o);
 	free(o);
 	o = ft_strdup(p);
 	free(p);
