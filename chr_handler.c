@@ -6,11 +6,41 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/15 17:05:21 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/29 14:17:37 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+/*
+** static int utf8_to_char(int c)
+**
+** Converts a UTF-8 character into a format that is readable by the write system
+** call.
+** Conversion takes place using bit manipulation to strip the bytes to their
+** significant bits based on the chart given in
+** https://en.wikipedia.org/wiki/UTF-8
+** Returns the integer representing the significant bits of the UTF-8 character
+*/
+
+static int	utf8_to_char(int c)
+{
+	unsigned char o[4];
+
+	o[0] = c & 0xFF;
+	o[1] = ((c >> 8) & 0xFF) & 0x3F;
+	o[2] = ((c >> 16) & 0xFF) & 0x3F;
+	o[3] = ((c >> 24) & 0xFF) & 0x3F;
+	if ((o[0] & 0x80) == 0)
+		return (o[0]);
+	if ((o[0] & 0xE0) == 0xC0)
+		return (((o[0] & 0x1F) << 6) | o[1]);
+	else if ((o[0] & 0xF0) == 0xE0)
+		return (((o[0] & 0x0F) << 12) | (o[1] << 6) | o[2]);
+	else if ((o[0] & 0xF8) == 0xF0)
+		return (((o[0] & 0x07) << 18) | (o[1] << 12) | (o[2] << 6) | o[3]);
+	return (0);
+}
 
 /*
 ** Each of the following functions contains integer array wpl as an argument.
@@ -29,22 +59,11 @@
 ** The flags in flags[2] can only be used on signed numbers (d or i)
 */
 
-static char	*utf8_to_byte(int c)
-{
-	char *out;
-
-	out = ft_strnew(4);
-	out[0] = (c >> 24) & 0xFF;
-	out[1] = (c >> 16) & 0xFF;
-	out[2] = (c >> 8) & 0xFF;
-	out[3] = c & 0xFF;
-	return (out);
-}
-
 static int	c_handler(char c, va_list *args, int *f, int *wpl)
 {
 	size_t	t;
 	char	*o;
+	int		w;
 
 	t = (wpl[0] >= 0) ? wpl[0] : 0;
 	if (t > 0)
@@ -58,7 +77,10 @@ static int	c_handler(char c, va_list *args, int *f, int *wpl)
 	else if (c == '%')
 		write(1, "%", 1);
 	else
-		write(1, utf8_to_byte(va_arg(*args, wchar_t)), 4);
+	{
+		w = utf8_to_char(va_arg(*args, wchar_t));
+		write(1, &w, sizeof(int));
+	}
 	if (f[1] == 2)
 		ft_putstr(o);
 	ft_strdel(&o);
@@ -68,16 +90,27 @@ static int	c_handler(char c, va_list *args, int *f, int *wpl)
 static int	ft_putwstr(wchar_t *str, int precision)
 {
 	int len;
+	int i;
+	int w;
 
 	len = 0;
-	while (str[len] != '\0')
+	i = 0;
+	while (str[len] != 0)
 		len++;
 	if (precision != 0 && precision < len)
 	{
-		write(1, str, precision * sizeof(wchar_t));
+		while (i < precision)
+		{
+			w = utf8_to_char(str[i++]);
+			write(1, &w, sizeof(int));
+		}
 		return (precision);
 	}
-	write(1, str, len * sizeof(wchar_t));
+	while (i < len)
+	{
+		w = utf8_to_char(str[i++]);
+		write(1, &w, sizeof(int));
+	}
 	return (len);
 }
 
