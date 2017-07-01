@@ -6,40 +6,53 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/29 14:17:37 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/30 20:35:05 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
 /*
-** static int utf8_to_char(int c)
+** static char *utf8_to_char(int c)
 **
 ** Converts a UTF-8 character into a format that is readable by the write system
 ** call.
 ** Conversion takes place using bit manipulation to strip the bytes to their
 ** significant bits based on the chart given in
 ** https://en.wikipedia.org/wiki/UTF-8
-** Returns the integer representing the significant bits of the UTF-8 character
+** The resulting integer is then split into bytes. Each byte is converted to a
+** hexadecimal string which is then joined together with a hexadecimal escape
+** sequence, creating a string of hexadecimal bytes which the function returns.
+** This string is interpreted by write as the Unicode character.
 */
 
-static int	utf8_to_char(int c)
+static char	*utf8_to_char(int c)
 {
-	unsigned char o[4];
+	unsigned char b[4];
+	int r;
+	char *o;
+	int i;
 
-	o[0] = c & 0xFF;
-	o[1] = ((c >> 8) & 0xFF) & 0x3F;
-	o[2] = ((c >> 16) & 0xFF) & 0x3F;
-	o[3] = ((c >> 24) & 0xFF) & 0x3F;
-	if ((o[0] & 0x80) == 0)
-		return (o[0]);
-	if ((o[0] & 0xE0) == 0xC0)
-		return (((o[0] & 0x1F) << 6) | o[1]);
-	else if ((o[0] & 0xF0) == 0xE0)
-		return (((o[0] & 0x0F) << 12) | (o[1] << 6) | o[2]);
-	else if ((o[0] & 0xF8) == 0xF0)
-		return (((o[0] & 0x07) << 18) | (o[1] << 12) | (o[2] << 6) | o[3]);
-	return (0);
+	b[0] = BYTE(c, 0);
+	b[1] = BYTE(c, 1) & 0x3F;
+	b[2] = BYTE(c, 2) & 0x3F;
+	b[3] = BYTE(c, 3) & 0x3F;
+	i = 0;
+	r = ((b[0] & 0x80) == 0) ? b[0] : 0;
+	r = (((b[0] & 0xE0) == 0xC0) && ++i) ? (((b[0] & 0x1F) << 6) | b[1]) : r;
+	if ((b[0] & 0xF0) == 0xE0 && ++i && ++i)
+		r = (((b[0] & 0x0F) << 12) | (b[1] << 6) | b[2]);
+	else if ((b[0] & 0xF8) == 0xF0 && ++i && ++i && ++i)
+		r = (((b[0] & 0x07) << 18) | (b[1] << 12) | (b[2] << 6) | b[3]);
+	o = ft_strnew(i + 1);
+	while (r <= 0x7FF && i >= 0)
+		o[1 - i] = (i == 1) ? (0xC0 | O(r, i--)) : (0x80 | (O(r, i--) & 0x3F));
+	while (r <= 0xFFFF && i >= 0)
+		o[2 - i] = (i == 2) ? (0xE0 | O(r, i--)) : (0x80 | (O(r, i--) & 0x3F));
+	while (r <= 0x1FFFFF && i >= 0)
+		o[3 - i] = (i == 3) ? (0xF0 | O(r, i--)) : (0x80 | (O(r, i--) & 0x3F));
+	o[0] = (r <= 0x7F) ? (r & 0x7F) : o[0];
+	return (o);
 }
 
 /*
@@ -63,7 +76,7 @@ static int	c_handler(char c, va_list *args, int *f, int *wpl)
 {
 	size_t	t;
 	char	*o;
-	int		w;
+	char	*w;
 
 	t = (wpl[0] >= 0) ? wpl[0] : 0;
 	if (t > 0)
@@ -78,8 +91,8 @@ static int	c_handler(char c, va_list *args, int *f, int *wpl)
 		write(1, "%", 1);
 	else
 	{
-		w = utf8_to_char(va_arg(*args, wchar_t));
-		write(1, &w, sizeof(int));
+		w = utf8_to_char(va_arg(*args, int));
+		ft_putstr(w);
 	}
 	if (f[1] == 2)
 		ft_putstr(o);
@@ -89,9 +102,9 @@ static int	c_handler(char c, va_list *args, int *f, int *wpl)
 
 static int	ft_putwstr(wchar_t *str, int precision)
 {
-	int len;
-	int i;
-	int w;
+	int		len;
+	int		i;
+	char	*w;
 
 	len = 0;
 	i = 0;
@@ -102,14 +115,14 @@ static int	ft_putwstr(wchar_t *str, int precision)
 		while (i < precision)
 		{
 			w = utf8_to_char(str[i++]);
-			write(1, &w, sizeof(int));
+			ft_putstr(w);
 		}
 		return (precision);
 	}
 	while (i < len)
 	{
 		w = utf8_to_char(str[i++]);
-		write(1, &w, sizeof(int));
+		ft_putstr(w);
 	}
 	return (len);
 }

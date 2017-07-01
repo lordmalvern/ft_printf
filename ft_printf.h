@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 14:09:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/11 18:56:46 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/06/30 20:21:10 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 # define IS_LON(x) (LON(x) || L_OCT(x) || U_LON(x) || PTR(x))
 # define IS_CHR(x) (CHR(x) || STR(x) || W_CHR(x) || W_STR(x))
 # define IS_PRE(x) (!IS_NUM(x) && !IS_LON(x) && !IS_CHR(x) && x != '%')
+# define BYTE(x, y) ((x >> 8 * y) & 0xFF)
+# define O(x, y) (x >> 6 * y)
 
 typedef enum	e_lmod
 {
