@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 14:09:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/30 20:21:10 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/02 21:31:28 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,11 @@
 # define C_HEX(x) (x == 'X')
 # define CHR(x) (x == 'c')
 # define W_CHR(x) (x == 'C')
+# define IS_DIG(x) (x >= '0' && x <= '9')
 # define IS_NUM(x) (INT(x) || OCT(x) || U_INT(x) || HEX(x) || C_HEX(x))
 # define IS_LON(x) (LON(x) || L_OCT(x) || U_LON(x) || PTR(x))
 # define IS_CHR(x) (CHR(x) || STR(x) || W_CHR(x) || W_STR(x))
-# define IS_PRE(x) (!IS_NUM(x) && !IS_LON(x) && !IS_CHR(x) && x != '%')
+# define IS_PRE(x) (IS_FLAG(x) || IS_LMOD(x) || IS_DIG(x) || x == '.')
 # define BYTE(x, y) ((x >> 8 * y) & 0xFF)
 # define O(x, y) (x >> 6 * y)
 

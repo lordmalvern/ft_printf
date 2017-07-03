@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/15 19:15:12 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/02 21:32:03 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ static int		print_handler(char *fmt, va_list *args, int *i)
 	ft_bzero(flags, 3 * sizeof(int));
 	ft_memset(width_prec_lmod, -1, 3 * sizeof(int));
 	out = 0;
-	while (IS_PRE(fmt[*i]))
+	while (IS_PRE(fmt[*i]) && fmt[*i] != '\0')
 	{
 		flag_handler(&flags, fmt, i);
 		width_prec_lmod[0] = (ft_isdigit(fmt[*i])) ? wp_handler(fmt, i) : -1;

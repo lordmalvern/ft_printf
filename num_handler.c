@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/17 14:11:46 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/02 20:26:37 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static char		*hex_handler(char c, va_list *args, int *f, int *wpl)
 	uintmax_t	n;
 
 	wpl[1] = (f[1] == 1 && wpl[1] < wpl[0]) ? wpl[0] : wpl[1];
-	if ((f[0] == 1 || PTR(c)) && wpl[1] - 2 > 0)
+	if ((f[0] == 1 && !PTR(c)) && wpl[1] - 2 > 0)
 		wpl[1] -= 2;
 	n = u_con(c, args, (t_lmod)wpl[2]);
 	o = ft_utoa_base(n, 16, wpl[1]);
