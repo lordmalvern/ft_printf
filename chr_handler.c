@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/30 20:35:05 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/02 19:16:31 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,30 +28,29 @@
 
 static char	*utf8_to_char(int c)
 {
-	unsigned char b[4];
-	int r;
 	char *o;
-	int i;
 
-	b[0] = BYTE(c, 0);
-	b[1] = BYTE(c, 1) & 0x3F;
-	b[2] = BYTE(c, 2) & 0x3F;
-	b[3] = BYTE(c, 3) & 0x3F;
-	i = 0;
-	r = ((b[0] & 0x80) == 0) ? b[0] : 0;
-	r = (((b[0] & 0xE0) == 0xC0) && ++i) ? (((b[0] & 0x1F) << 6) | b[1]) : r;
-	if ((b[0] & 0xF0) == 0xE0 && ++i && ++i)
-		r = (((b[0] & 0x0F) << 12) | (b[1] << 6) | b[2]);
-	else if ((b[0] & 0xF8) == 0xF0 && ++i && ++i && ++i)
-		r = (((b[0] & 0x07) << 18) | (b[1] << 12) | (b[2] << 6) | b[3]);
-	o = ft_strnew(i + 1);
-	while (r <= 0x7FF && i >= 0)
-		o[1 - i] = (i == 1) ? (0xC0 | O(r, i--)) : (0x80 | (O(r, i--) & 0x3F));
-	while (r <= 0xFFFF && i >= 0)
-		o[2 - i] = (i == 2) ? (0xE0 | O(r, i--)) : (0x80 | (O(r, i--) & 0x3F));
-	while (r <= 0x1FFFFF && i >= 0)
-		o[3 - i] = (i == 3) ? (0xF0 | O(r, i--)) : (0x80 | (O(r, i--) & 0x3F));
-	o[0] = (r <= 0x7F) ? (r & 0x7F) : o[0];
+	o = ft_strnew(4);
+	if (c <= 0x7F)
+		o[0] = c & 0x7F;
+	else if (c <= 0x7FF)
+	{
+		o[0] = (0xC0 | O(c, 1));
+		o[1] = (0x80 | (O(c, 0) & 0x3F));
+	}
+	else if (c <= 0xFFFF)
+	{
+		o[0] = (0xE0 | O(c, 2));
+		o[1] = (0x80 | (O(c, 1) & 0x3F));
+		o[2] = (0x80 | (O(c, 0) & 0x3F));
+	}
+	else if (c <= 0x1FFFFF)
+	{
+		o[0] = (0xF0 | O(c, 3));
+		o[1] = (0x80 | (O(c, 2) & 0x3F));
+		o[2] = (0x80 | (O(c, 1) & 0x3F));
+		o[3] = (0x80 | (O(c, 0) & 0x3F));
+	}
 	return (o);
 }
 
@@ -108,20 +107,20 @@ static int	ft_putwstr(wchar_t *str, int precision)
 
 	len = 0;
 	i = 0;
-	while (str[len] != 0)
+	while (str[len] != L'\0')
 		len++;
-	if (precision != 0 && precision < len)
+	if (precision > 0 && precision < len)
 	{
 		while (i < precision)
 		{
-			w = utf8_to_char(str[i++]);
+			w = utf8_to_char((int)str[i++]);
 			ft_putstr(w);
 		}
 		return (precision);
 	}
 	while (i < len)
 	{
-		w = utf8_to_char(str[i++]);
+		w = utf8_to_char((int)str[i++]);
 		ft_putstr(w);
 	}
 	return (len);
