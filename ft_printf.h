@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 14:09:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/02 21:31:28 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/03 15:37:12 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ typedef enum	e_lmod
 {
 	HH,
 	H,
+	Z,
 	L,
 	LL,
 	J,
-	Z,
-	N
+	N = -1
 }				t_lmod;
 int				ft_printf(char *fmt, ...);
 char			*ft_itoa_base(intmax_t value, int base, int precision);

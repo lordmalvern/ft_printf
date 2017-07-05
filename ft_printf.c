@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/02 21:32:03 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/04 19:49:10 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,29 +47,33 @@ static int		wp_handler(char *fmt, int *i)
 	return (out);
 }
 
-static t_lmod	lmod_handler(char *fmt, int *i)
+static t_lmod	lmod_handler(char *fmt, int *i, int old)
 {
-	int j;
+	int		j;
+	t_lmod	out;
 
 	j = 0;
+	out = N;
 	if (fmt[*i] == 'h')
 	{
 		if (fmt[++(*i)] == 'h')
 			j = (*i)++;
-		return ((j == *i - 1) ? HH : H);
+		out = ((j == *i - 1) ? HH : H);
 	}
 	else if (fmt[*i] == 'l')
 	{
 		if (fmt[++(*i)] == 'l')
 			j = (*i)++;
-		return ((j == *i - 1) ? LL : L);
+		out = ((j == *i - 1) ? LL : L);
 	}
 	else if (fmt[*i] == 'j' || fmt[*i] == 'z')
 	{
 		(*i)++;
-		return ((fmt[*i - 1] == 'j') ? J : Z);
+		out = ((fmt[*i - 1] == 'j') ? J : Z);
 	}
-	return (N);
+	if ((int)old > (int)out)
+		out = old;
+	return (out);
 }
 
 /*
@@ -82,38 +86,34 @@ static t_lmod	lmod_handler(char *fmt, int *i)
 ** flags[1] is set to 0 for no padding, 1 for padding with zeroes, 2 for padding
 ** with spaces.
 ** flags[2] is set to 0 for default signs, 1 for blanks, 2 for both + and -
-** width is set to 0 by default and is set to the field width if it exists.
-** prec is set to 0 by default and is set to the precision if it exists.
-** lmod is set to N by default and is set to the length modifier if it exists.
-** j stores the index of the end of a number for atoi conversions.
+** wpl[0] is set to -1 by default and is set to the field width if it exists.
+** wpl[1] is set to -1 by default and is set to the precision if it exists.
+** wpl[2] is set to N by default and is set to the length modifier if it exists.
 ** Returns number of characters written to stdout.
 */
 
 static int		print_handler(char *fmt, va_list *args, int *i)
 {
 	int		*flags;
-	int		width_prec_lmod[3];
+	int		wpl[3];
 	int		out;
-	t_lmod	lmod;
 
-	flags = (int *)malloc(3 * sizeof(int));
-	ft_bzero(flags, 3 * sizeof(int));
-	ft_memset(width_prec_lmod, -1, 3 * sizeof(int));
+	flags = (int *)ft_memalloc(3 * sizeof(int));
+	ft_memset(wpl, -1, 3 * sizeof(int));
 	out = 0;
 	while (IS_PRE(fmt[*i]) && fmt[*i] != '\0')
 	{
 		flag_handler(&flags, fmt, i);
-		width_prec_lmod[0] = (ft_isdigit(fmt[*i])) ? wp_handler(fmt, i) : -1;
-		width_prec_lmod[1] = (fmt[*i] == '.') ? wp_handler(fmt, i) : -1;
-		if (width_prec_lmod[1] > 0 && flags[1] == 1)
-			flags[1] = 0;
-		lmod = (IS_LMOD(fmt[*i])) ? lmod_handler(fmt, i) : N;
-		width_prec_lmod[2] = (int)lmod;
+		wpl[0] = (ft_isdigit(fmt[*i])) ? wp_handler(fmt, i) : wpl[0];
+		wpl[1] = (fmt[*i] == '.') ? wp_handler(fmt, i) : wpl[1];
+		flags[1] = (wpl[1] > 0 && flags[1] == 1) ? 0 : flags[1];
+		if (IS_LMOD(fmt[*i]))
+			wpl[2] = (int)lmod_handler(fmt, i, wpl[2]);
 	}
 	if (IS_NUM(fmt[*i]) || IS_LON(fmt[*i]))
-		out = num_handler(fmt[(*i)++], args, flags, width_prec_lmod);
+		out = num_handler(fmt[(*i)++], args, flags, wpl);
 	else if (IS_CHR(fmt[*i]) || fmt[*i] == '%')
-		out = chr_handler(fmt[(*i)++], args, flags, width_prec_lmod);
+		out = chr_handler(fmt[(*i)++], args, flags, wpl);
 	free(flags);
 	return (out);
 }
