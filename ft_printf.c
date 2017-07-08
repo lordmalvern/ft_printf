@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/04 19:49:10 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/04 22:18:56 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,13 @@ static void		flag_handler(int **flags, char *fmt, int *i)
 
 static int		wp_handler(char *fmt, int *i)
 {
-	int		j;
 	int		out;
-	char	*to_i;
 
 	if (fmt[*i] == '.')
 		(*i)++;
-	j = *i;
+	out = ft_atoi((fmt + *i));
 	while (ft_isdigit(fmt[*i]))
 		(*i)++;
-	to_i = ft_strsub(fmt, j, *i - j);
-	out = ft_atoi(to_i);
-	ft_strdel(&to_i);
 	return (out);
 }
 

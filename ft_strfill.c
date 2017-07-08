@@ -6,23 +6,23 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 17:14:55 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/10 14:19:20 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/04 21:41:33 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*ft_strfill(char *src, const char *fill, size_t len, int dir)
+char	*ft_strfill(char **src, const char *fill, size_t len, int dir)
 {
 	char	*out;
 	char	*temp;
 	size_t	l;
 
-	l = ft_strlen(src);
+	l = ft_strlen(*src);
 	if (l >= len || len <= 0)
-		return (src);
-	out = ft_strdup(src);
-	free(src);
+		return (*src);
+	out = ft_strdup(*src);
+	ft_strdel(src);
 	while (l < len)
 	{
 		if (dir == 0)
