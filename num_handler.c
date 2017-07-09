@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/29 14:53:19 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/04 21:42:43 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/09 13:43:57 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static char		*int_handler(char c, va_list *args, int *f, int *w)
 	char		*temp;
 	intmax_t	n;
 
-	n = s_con(c, args, (t_lmod)w[2]);
+	n = s_con(c, args, w[2]);
 	w[0] = ((n < 0 || f[2] > 0) && f[1] == 1 && w[1] == -1) ? w[0] - 1 : w[0];
 	w[1] = (f[1] == 1 && w[1] == -1) ? w[0] : w[1];
 	o = ft_itoa_base(n, 10, w[1]);
@@ -65,7 +65,7 @@ static char		*oct_handler(char c, va_list *args, int *f, int *w)
 	w[1] = (f[1] == 1 && w[1] == -1) ? w[0] : w[1];
 	if (f[0] == 1 && w[1] - 1 > 0)
 		w[1]--;
-	n = u_con(c, args, (t_lmod)w[2]);
+	n = u_con(c, args, w[2]);
 	o = ft_utoa_base(n, 8, w[1]);
 	t = (w[0] >= 0) ? w[0] : 0;
 	p = (f[0] == 1 && (n > 0 || w[1] == 0)) ? ft_strjoin("0", o) : ft_strdup(o);
@@ -85,7 +85,7 @@ static char		*uint_handler(char c, va_list *args, int *f, int *w)
 	uintmax_t	n;
 
 	w[1] = (f[1] == 1 && w[1] == -1) ? w[0] : w[1];
-	n = u_con(c, args, (t_lmod)w[2]);
+	n = u_con(c, args, w[2]);
 	o = ft_utoa_base(n, 10, w[1]);
 	t = (w[0] >= 0) ? w[0] : 0;
 	if (f[1] == 0 || (f[1] == 1 && w[1] != w[0]))
@@ -102,8 +102,8 @@ static char		*hex_handler(char c, va_list *args, int *f, int *w)
 	uintmax_t	n;
 
 	w[1] = (f[1] == 1 && w[1] == -1) ? w[0] : w[1];
-	w[1] = ((f[0] == 1 && !PTR(c)) && w[1] - 2 > 0) ? w[1] - 2 : w[1];
-	n = u_con(c, args, (t_lmod)w[2]);
+	w[1] -= ((f[0] == 1 || PTR(c)) && w[1] - 2 > 0 && w[1] == w[0]) ? 2 : 0;
+	n = u_con(c, args, w[2]);
 	o = ft_utoa_base(n, 16, w[1]);
 	t = (w[0] >= 0) ? w[0] : 0;
 	p = ((f[0] == 1 && n != 0) || PTR(c)) ? ft_strjoin("0X", o) : ft_strdup(o);

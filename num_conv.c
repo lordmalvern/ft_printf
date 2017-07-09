@@ -6,13 +6,13 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 16:05:20 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/06/15 19:51:03 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/09 13:44:20 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-intmax_t	s_con(char c, va_list *args, t_lmod lmod)
+intmax_t	s_con(char c, va_list *args, int lmod)
 {
 	if (lmod == L || LON(c))
 		return (va_arg(*args, long));
@@ -29,7 +29,7 @@ intmax_t	s_con(char c, va_list *args, t_lmod lmod)
 	return (va_arg(*args, int));
 }
 
-uintmax_t	u_con(char c, va_list *args, t_lmod lmod)
+uintmax_t	u_con(char c, va_list *args, int lmod)
 {
 	if (lmod == L || U_LON(c) || L_OCT(c))
 		return (va_arg(*args, unsigned long));

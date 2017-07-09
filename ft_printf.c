@@ -6,13 +6,13 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 13:57:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/04 22:18:56 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/09 13:47:37 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void		flag_handler(int **flags, char *fmt, int *i)
+static void	flag_handler(int **flags, char *fmt, int *i)
 {
 	while (IS_FLAG(fmt[*i]))
 	{
@@ -30,7 +30,7 @@ static void		flag_handler(int **flags, char *fmt, int *i)
 	}
 }
 
-static int		wp_handler(char *fmt, int *i)
+static int	wp_handler(char *fmt, int *i)
 {
 	int		out;
 
@@ -42,10 +42,10 @@ static int		wp_handler(char *fmt, int *i)
 	return (out);
 }
 
-static t_lmod	lmod_handler(char *fmt, int *i, int old)
+static int	lmod_handler(char *fmt, int *i, int old)
 {
-	int		j;
-	t_lmod	out;
+	int	j;
+	int	out;
 
 	j = 0;
 	out = N;
@@ -66,7 +66,7 @@ static t_lmod	lmod_handler(char *fmt, int *i, int old)
 		(*i)++;
 		out = ((fmt[*i - 1] == 'j') ? J : Z);
 	}
-	if ((int)old > (int)out)
+	if (old > out)
 		out = old;
 	return (out);
 }
@@ -87,7 +87,7 @@ static t_lmod	lmod_handler(char *fmt, int *i, int old)
 ** Returns number of characters written to stdout.
 */
 
-static int		print_handler(char *fmt, va_list *args, int *i)
+static int	print_handler(char *fmt, va_list *args, int *i)
 {
 	int		*flags;
 	int		wpl[3];
@@ -103,17 +103,17 @@ static int		print_handler(char *fmt, va_list *args, int *i)
 		wpl[1] = (fmt[*i] == '.') ? wp_handler(fmt, i) : wpl[1];
 		flags[1] = (wpl[1] > 0 && flags[1] == 1) ? 0 : flags[1];
 		if (IS_LMOD(fmt[*i]))
-			wpl[2] = (int)lmod_handler(fmt, i, wpl[2]);
+			wpl[2] = lmod_handler(fmt, i, wpl[2]);
 	}
 	if (IS_NUM(fmt[*i]) || IS_LON(fmt[*i]))
 		out = num_handler(fmt[(*i)++], args, flags, wpl);
-	else if (IS_CHR(fmt[*i]) || fmt[*i] == '%')
+	else if (fmt[*i] != '\0')
 		out = chr_handler(fmt[(*i)++], args, flags, wpl);
 	free(flags);
 	return (out);
 }
 
-int				ft_printf(char *fmt, ...)
+int			ft_printf(char *fmt, ...)
 {
 	va_list	args;
 	int		i;

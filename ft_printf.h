@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 14:09:26 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/04 21:40:42 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/09 13:44:32 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,21 @@
 # define IS_PRE(x) (IS_FLAG(x) || IS_LMOD(x) || IS_DIG(x) || x == '.')
 # define BYTE(x, y) ((x >> 8 * y) & 0xFF)
 # define O(x, y) (x >> 6 * y)
+# define HH 0
+# define H 1
+# define Z 2
+# define L 3
+# define LL 4
+# define J 5
+# define N -1
 
-typedef enum	e_lmod
-{
-	HH,
-	H,
-	Z,
-	L,
-	LL,
-	J,
-	N = -1
-}				t_lmod;
 int				ft_printf(char *fmt, ...);
 char			*ft_itoa_base(intmax_t value, int base, int precision);
 char			*ft_utoa_base(uintmax_t value, int base, int precision);
 int				num_handler(char c, va_list *args, int *flags, int *wpl);
 int				chr_handler(char c, va_list *args, int *flags, int *wpl);
 char			*ft_strfill(char **src, const char *fill, size_t len, int dir);
-intmax_t		s_con(char c, va_list *args, t_lmod lmod);
-uintmax_t		u_con(char c, va_list *args, t_lmod lmod);
+intmax_t		s_con(char c, va_list *args, int lmod);
+uintmax_t		u_con(char c, va_list *args, int lmod);
 
 #endif

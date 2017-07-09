@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/04 21:43:40 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/09 16:29:27 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,53 +77,49 @@ static int	c_handler(char c, va_list *args, int *f, int *wpl)
 	char	*o;
 	char	*w;
 
-	t = (wpl[0] >= 0) ? wpl[0] : 0;
-	if (t > 0)
-		t--;
+	t = (wpl[0] > 0) ? wpl[0] - 1 : 0;
 	o = ft_strnew(1);
 	o = (f[1] == 1) ? ft_strfill(&o, "0", t, 0) : ft_strfill(&o, " ", t, 0);
 	if (f[1] != 2)
 		ft_putstr(o);
-	if (CHR(c) && wpl[2] != (int)L)
+	if (CHR(c) && wpl[2] != L)
 		ft_putchar(va_arg(*args, int));
-	else if (c == '%')
-		write(1, "%", 1);
+	else if (!CHR(c) && !W_CHR(c))
+		write(1, &c, 1);
 	else
 	{
-		w = utf8_to_char(va_arg(*args, int));
+		w = utf8_to_char(va_arg(*args, wchar_t));
+		t += (w[0] == '\0') ? 1 : ft_strlen(w);
 		ft_putstr(w);
+		ft_strdel(&w);
 	}
 	if (f[1] == 2)
 		ft_putstr(o);
 	ft_strdel(&o);
-	return (t + 1);
+	return ((W_CHR(c) || (CHR(c) && wpl[2] == L)) ? t : ++t);
 }
 
-static int	ft_putwstr(wchar_t *str, int precision)
+static char	*ft_wcstombs(wchar_t *str)
 {
-	int		len;
 	int		i;
+	char	*o;
+	char	*temp;
 	char	*w;
 
-	len = 0;
 	i = 0;
-	while (str[len] != L'\0')
-		len++;
-	if (precision > 0 && precision < len)
+	if (str == NULL)
+		return (NULL);
+	o = ft_strnew(1);
+	while (str[i] != L'\0')
 	{
-		while (i < precision)
-		{
-			w = utf8_to_char((int)str[i++]);
-			ft_putstr(w);
-		}
-		return (precision);
+		w = utf8_to_char(str[i++]);
+		temp = ft_strjoin(o, w);
+		ft_strdel(&w);
+		ft_strdel(&o);
+		o = ft_strdup(temp);
+		ft_strdel(&temp);
 	}
-	while (i < len)
-	{
-		w = utf8_to_char((int)str[i++]);
-		ft_putstr(w);
-	}
-	return (len);
+	return (o);
 }
 
 static int	str_handler(char c, va_list *args, int *f, int *wpl)
@@ -131,33 +127,32 @@ static int	str_handler(char c, va_list *args, int *f, int *wpl)
 	int		t;
 	char	*o;
 
-	t = (wpl[0] >= 0) ? wpl[0] : 0;
-	if (STR(c) && wpl[2] != (int)L)
+	t = (wpl[0] > 0) ? wpl[0] : 0;
+	if (STR(c) && wpl[2] != L)
 		o = ft_strdup(va_arg(*args, char *));
 	else
-		o = ft_strnew(1);
-	if (o == NULL && wpl[2] != (int)L && !W_STR(c))
+		o = ft_wcstombs(va_arg(*args, wchar_t *));
+	if (o == NULL && f[1] == 0)
 	{
 		ft_putstr("(null)");
 		return (ft_strlen("(null)"));
 	}
+	else if (o == NULL)
+		o = ft_strnew(1);
+	if (wpl[1] > 0 && (W_STR(c) || wpl[2] == L) && wpl[1] % 4 == 0)
+		wpl[1]--;
 	o = (wpl[1] != -1) ? ft_strsub(o, 0, wpl[1]) : o;
 	o = (f[1] == 1) ? ft_strfill(&o, "0", t, 0) : o;
 	o = (f[1] == 2) ? ft_strfill(&o, " ", t, 1) : ft_strfill(&o, " ", t, 0);
-	t = (STR(c) && wpl[2] != (int)L) ? ft_strlen(o) : t;
-	if (f[1] != 2)
-		ft_putstr(o);
-	if (W_STR(c) || wpl[2] == (int)L)
-		t += ft_putwstr(va_arg(*args, wchar_t *), wpl[1]);
-	if (f[1] == 2)
-		ft_putstr(o);
+	t = ft_strlen(o);
+	ft_putstr(o);
 	ft_strdel(&o);
 	return (t);
 }
 
 int			chr_handler(char c, va_list *args, int *flags, int *wpl)
 {
-	if (CHR(c) || W_CHR(c) || c == '%')
+	if (!STR(c) && !W_STR(c))
 		return (c_handler(c, args, flags, wpl));
 	if (STR(c) || W_STR(c))
 		return (str_handler(c, args, flags, wpl));
