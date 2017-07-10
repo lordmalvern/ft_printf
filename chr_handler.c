@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/09 16:29:27 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/09 19:39:56 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static int	c_handler(char c, va_list *args, int *f, int *wpl)
 	else
 	{
 		w = utf8_to_char(va_arg(*args, wchar_t));
-		t += (w[0] == '\0') ? 1 : ft_strlen(w);
+		t += (w[0] == '\0') ? write(1, "\0", 1) : ft_strlen(w);
 		ft_putstr(w);
 		ft_strdel(&w);
 	}
