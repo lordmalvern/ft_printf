@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/11 20:34:56 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/11 21:27:29 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,8 @@
 **
 ** Converts a UTF-8 character into a format that is readable by the write system
 ** call.
-** Conversion takes place using bit manipulation to strip the bytes to their
-** significant bits based on the chart given in
-** https://en.wikipedia.org/wiki/UTF-8
-** The resulting integer is then split into bytes. Each byte is converted to a
-** hexadecimal string which is then joined together with a hexadecimal escape
-** sequence, creating a string of hexadecimal bytes which the function returns.
-** This string is interpreted by write as the Unicode character.
+** Conversion takes place using bit manipulation to strip the given integer into
+** bytes based on the chart given in https://en.wikipedia.org/wiki/UTF-8
 */
 
 static char	*utf8_to_char(int c)
