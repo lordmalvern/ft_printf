@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/09 19:39:56 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/11 19:36:24 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,27 @@ static char	*utf8_to_char(int c)
 	char *o;
 
 	o = ft_strnew(4);
-	if (c <= 0x7F)
-		o[0] = c & 0x7F;
-	else if (c <= 0x7FF)
+	o[0] = (c <= 0x7F) ? c & 0x7F : o[0];
+	if (c <= 0x7FF && c > 0x7F)
 	{
 		o[0] = (0xC0 | O(c, 1));
 		o[1] = (0x80 | (O(c, 0) & 0x3F));
 	}
-	else if (c <= 0xFFFF)
+	else if (c <= 0xFFFF && c > 0x7F && (c < 0xD800 || c > 0xDFFF))
 	{
 		o[0] = (0xE0 | O(c, 2));
 		o[1] = (0x80 | (O(c, 1) & 0x3F));
 		o[2] = (0x80 | (O(c, 0) & 0x3F));
 	}
-	else if (c <= 0x1FFFFF)
+	else if (c <= 0x10FFFF && c > 0x7F && (c < 0xD800 || c > 0xDFFF))
 	{
 		o[0] = (0xF0 | O(c, 3));
 		o[1] = (0x80 | (O(c, 2) & 0x3F));
 		o[2] = (0x80 | (O(c, 1) & 0x3F));
 		o[3] = (0x80 | (O(c, 0) & 0x3F));
 	}
+	else if ((c > 0xD800 && c < 0xDFFF) || c > 0x10FFFF)
+		o = ft_strdup("\xEF\xBF\xBD");
 	return (o);
 }
 
