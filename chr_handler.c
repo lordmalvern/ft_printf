@@ -6,7 +6,7 @@
 /*   By: bpuschel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/30 20:54:46 by bpuschel          #+#    #+#             */
-/*   Updated: 2017/07/11 21:27:29 by bpuschel         ###   ########.fr       */
+/*   Updated: 2017/07/13 09:40:14 by bpuschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 ** call.
 ** Conversion takes place using bit manipulation to strip the given integer into
 ** bytes based on the chart given in https://en.wikipedia.org/wiki/UTF-8
+** If the given character is outside the valid Unicode range, then the character
+** is replaced with U+FFFD aka the replacement character.
 */
 
 static char	*utf8_to_char(int c)
